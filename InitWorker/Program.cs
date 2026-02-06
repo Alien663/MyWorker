@@ -52,7 +52,8 @@ Host.CreateDefaultBuilder(args)
         services.AddHttpClient<IMyHttpClient, MyHttpClient>((sp, client) =>
         {
             var cfg = sp.GetRequiredService<IConfiguration>();
-            var resourceURL = cfg["MyProject:Client:ResourceURL"];
+            var sampleOption = sp.GetRequiredService<IOptions<SampleOption>>().Value;
+            var resourceURL = sampleOption?.Resource;
             if (!string.IsNullOrEmpty(resourceURL))
             {
                 client.BaseAddress = new Uri(resourceURL);
