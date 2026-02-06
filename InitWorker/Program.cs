@@ -1,31 +1,48 @@
 ﻿using InitWorker;
-using InitWorker.Interface;
-using InitWorker.Service;
-using InitWorker.Entity;
+using InitWorker.Option;
+using SampleService1.Entities;
+using SampleService1.Interfaces;
+using SampleService1.Services;
+using SampleService2.Interfaces;
+using SampleService2.Services;
+using SampleService2.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 Host.CreateDefaultBuilder(args)
+    .ConfigureAppConfiguration((hostContext, config) =>
+    {
+        config.SetBasePath(Directory.GetCurrentDirectory());
+        config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+        if(hostContext.HostingEnvironment.IsDevelopment())
+        {
+            config.AddJsonFile($"appsettings.Development.json", optional: true, reloadOnChange: true);
+            config.AddUserSecrets<Program>(optional: true);
+        }
+    })
     .ConfigureServices((hostContext, services) =>
     {
         // Configure Setup
         IConfiguration config = hostContext.Configuration;
         services.AddSingleton(config);
+        services.Configure<ProxyOptions>(config.GetSection("Proxy"));
+        services.Configure<SampleOption>(config.GetSection("SampleOption"));
 
         // Http Client Factory
         static HttpClientHandler BuildHttpHandler(IServiceProvider sp)
         {
             var handler = new HttpClientHandler();
-            var cfg = sp.GetRequiredService<IConfiguration>();
-            var proxyIP = cfg["Proxy:IP"];
+            var proxyOptions = sp.GetRequiredService<IOptions<ProxyOptions>>().Value;
+            var proxyIP = proxyOptions?.IP;
             if (!string.IsNullOrEmpty(proxyIP))
             {
                 handler.Proxy = new WebProxy(proxyIP)
                 {
-                    Credentials = new NetworkCredential(cfg["Proxy:Account"], cfg["Proxy:Password"])
+                    Credentials = new NetworkCredential(proxyOptions?.Account, proxyOptions?.Password)
                 };
                 handler.UseProxy = true;
             }

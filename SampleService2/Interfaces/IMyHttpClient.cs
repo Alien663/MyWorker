@@ -1,4 +1,4 @@
-﻿namespace InitWorker.Interface;
+﻿namespace SampleService2.Interfaces;
 
 public interface IMyHttpClient
 {

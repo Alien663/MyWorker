@@ -1,33 +1,34 @@
-﻿using InitWorker.Interface;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client;
+using SampleService2.Interfaces;
+using SampleService2.Options;
 using System.Net.Http.Headers;
 using System.Web;
 
-namespace InitWorker.Service;
+namespace SampleService2.Services;
 
 public class MyHttpClient : IMyHttpClient
 {
-    private readonly IConfiguration _config;
+    private readonly SampleOption _option;
     private readonly IConfidentialClientApplication _app;
     private readonly string[] _scopes;
     private readonly HttpClient _http;
     private readonly ILogger<MyHttpClient> _logger;
 
-    public MyHttpClient(IConfiguration config, HttpClient http, ILogger<MyHttpClient> logger)
+    public MyHttpClient(IOptions<SampleOption> option, HttpClient http, ILogger<MyHttpClient> logger)
     {
         // Injection of dependencies
-        _config = config;
+        _option = option.Value;
         _http = http;
         _logger = logger;
 
         // Initialize confidential client application
-        _scopes = _config["MyApi:Scopes"]?.Split(';') ?? Array.Empty<string>();
+        _scopes = _option.Scope?.Split(";") ?? Array.Empty<string>();
         _app = ConfidentialClientApplicationBuilder
-            .Create(_config["AzureAd:ClientId"])
-            .WithClientSecret(_config["AzureAd:ClientSecret"])
-            .WithAuthority(_config["AzureAd:Authority"])
+            .Create(_option.ClientId)
+            .WithClientSecret(_option.ClientSecret)
+            .WithAuthority(_option.Authority)
             .Build();
     }
 

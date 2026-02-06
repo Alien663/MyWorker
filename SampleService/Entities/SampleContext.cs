@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace InitWorker.Entity;
+namespace SampleService1.Entities;
 
 public partial class SampleContext : DbContext
 {
