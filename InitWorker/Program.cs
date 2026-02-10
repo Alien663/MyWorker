@@ -16,13 +16,7 @@ using System.Net;
 Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((hostContext, config) =>
     {
-        config.SetBasePath(Directory.GetCurrentDirectory());
-        config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-        if(hostContext.HostingEnvironment.IsDevelopment())
-        {
-            config.AddJsonFile($"appsettings.Development.json", optional: true, reloadOnChange: true);
-            config.AddUserSecrets<Program>(optional: true);
-        }
+        config.AddUserSecrets<Program>(optional: true);
     })
     .ConfigureServices((hostContext, services) =>
     {

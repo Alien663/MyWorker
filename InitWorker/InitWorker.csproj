@@ -5,6 +5,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UserSecretsId>a61ce46e-f321-4ffb-ba47-a56352c1948f</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,9 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="appsettings.Development.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
