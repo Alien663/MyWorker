@@ -14,10 +14,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 Host.CreateDefaultBuilder(args)
-    .ConfigureAppConfiguration((hostContext, config) =>
-    {
-        config.AddUserSecrets<Program>(optional: true);
-    })
     .ConfigureServices((hostContext, services) =>
     {
         // Configure Setup
